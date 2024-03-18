@@ -5,13 +5,13 @@ services:
     restart: always
     environment:
       # Nombre de la base de datos
-      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
       # Nombre de usuario de la base de datos
-      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_USER: ${MYSQL_USER}
       # Contraseña para el usuario de la base de datos
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       # contraseña para el usuario root
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       # <Puerto Expuesto> : <MySQL Puerto dentro del container>
       - '${MYSQL_PORT}:3306'
