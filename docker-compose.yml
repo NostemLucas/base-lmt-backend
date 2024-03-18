@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      # Nombre de la base de datos
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      # Nombre de usuario de la base de datos
+      MYSQL_USER: "${MYSQL_USER}"
+      # Contraseña para el usuario de la base de datos
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      # contraseña para el usuario root
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    ports:
+      # <Puerto Expuesto> : <MySQL Puerto dentro del container>
+      - '${MYSQL_PORT}:3306'
+    expose:
+      # Expone el puerto 3306 del container
+      - '3306'
+      # Permite que el contenedor se comunique con otros contenedores
+    volumes:
+      - my-db:/var/lib/mysql
+# El volumen my-db se crea en el sistema de archivos del host
+volumes:
+  my-db:
