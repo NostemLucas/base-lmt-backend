@@ -1,8 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DataSource } from 'typeorm';
-import { ConfigService } from '@nestjs/config'
-import { SWAGGER_API_CURRENT_VERSION, SWAGGER_API_DESCRIPTION, SWAGGER_API_NAME, SWAGGER_API_ROOT } from './common';
+import { ConfigService } from '@nestjs/config';
+import {
+  SWAGGER_API_CURRENT_VERSION,
+  SWAGGER_API_DESCRIPTION,
+  SWAGGER_API_NAME,
+  SWAGGER_API_ROOT,
+} from './common/constants';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 
@@ -15,33 +20,30 @@ export const SessionAppDataSource = new DataSource({
   database: process.env.MYSQL_DATABASE,
   synchronize: false,
   entities: [__dirname + '/../src/**/*.entity{.ts,.js}'],
-})
+});
 
-const bootstrap = async () =>{
- //Configuracion de la aplicacion de nestjs
+const bootstrap = async () => {
+  //Configuracion de la aplicacion de nestjs
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn'],
-  })
-
+  });
 
   //Configuracion de la base de datos
-  await SessionAppDataSource.initialize()
-  const configService = app.get(ConfigService)
+  await SessionAppDataSource.initialize();
+  const configService = app.get(ConfigService);
   if (configService.get('NODE_ENV') !== 'production') {
-    createSwagger(app)
+    createSwagger(app);
   }
   // Configuracion de swagger
-    app.setGlobalPrefix(configService.get('PATH_SUBDOMAIN') || 'api')
-    app.enableCors({
+  app.setGlobalPrefix(configService.get('PATH_SUBDOMAIN') || 'api');
+  app.enableCors({
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-  })
-  const port = configService.get('PORT')
-  await app.listen(port)
-
-}
-
+  });
+  const port = configService.get('PORT');
+  await app.listen(port);
+};
 
 function createSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
@@ -50,10 +52,10 @@ function createSwagger(app: INestApplication) {
     .setVersion(SWAGGER_API_CURRENT_VERSION)
     .addServer(`http://localhost:${process.env.PORT}/api/`)
     .addBearerAuth()
-    .build()
+    .build();
 
-  const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup(SWAGGER_API_ROOT, app, document)
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup(SWAGGER_API_ROOT, app, document);
 }
 
 bootstrap();
