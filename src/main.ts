@@ -11,25 +11,12 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 
-export const SessionAppDataSource = new DataSource({
-  type: 'mysql',
-  host: process.env.MYSQL_HOST,
-  port: Number(process.env.MYSQL_PORT),
-  username: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-  synchronize: false,
-  entities: [__dirname + '/../src/**/*.entity{.ts,.js}'],
-});
-
 const bootstrap = async () => {
   //Configuracion de la aplicacion de nestjs
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn'],
   });
 
-  //Configuracion de la base de datos
-  await SessionAppDataSource.initialize();
   const configService = app.get(ConfigService);
   if (configService.get('NODE_ENV') !== 'production') {
     createSwagger(app);
